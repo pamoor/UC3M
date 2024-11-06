@@ -1,9 +1,3 @@
----
-title: "Project README - 1942 Game Version"
-author: "Álvaro Carrasco & Pablo Amor"
-output: github_document
----
-
 # Final Project: 1942
 
 **Group 81**  
@@ -39,23 +33,53 @@ Key methods:
 - **Death**: Animates the plane's destruction, ending the game.
 
 ### Background Class
-Handles background elements, such as islands and waves. Creates movement for these objects, enhancing the sense of forward motion.
+This class is responsible for handling background elements, like islands and waves. Using attributes like position (`x`, `y`) and type, it moves the background elements downward, giving the illusion that the plane is advancing.
+
+Objects included in the background:
+- An initial aircraft carrier
+- Three islands (Ibiza, Puerto Rico, Huete)
+- Waves
+- Start and “Game Over” images
 
 ### Projectiles Class
-Manages projectile behavior, including direction, speed, and type (e.g., missile, bonus projectile). The `move` method defines the trajectory.
+This class manages the behavior of projectiles. It receives the initial position of the projectile, and flags indicating if it belongs to the player, if it is a missile, and if it is a bonus projectile.
+
+Key attributes:
+- Damage level (depends on player status)
+- Sprite type (varies by projectile type)
+
+Movement:
+- If belonging to the player, the projectile moves upward.
+- Enemy projectiles move downward, with exceptions for the “super bomber,” which has a homing missile behavior.
 
 ### Enemies Class
-Defines four enemy types, each with unique attributes like movement pattern, health, and point values.
+Stores details for four enemy types in the game, each with unique attributes like movement, health, and points awarded upon defeat.
+
+Enemy Types:
+1. **Regular**: Basic enemy with a low firing rate, awards 100 points.
+2. **Bomber**: Shoots more regularly, requires multiple hits, awards 500 points.
+3. **Super Bomber**: Fires homing missiles, slow movement, awards 2000 points.
+4. **Red Squadron**: Appears in groups, has high speed, awards bonus points if defeated as a formation.
 
 ### DeadEnemy Class
-Represents the points awarded upon enemy destruction, moving upward and disappearing after a set time.
+Represents points earned by the player when an enemy is defeated. The object moves upward and disappears after a set time.
 
 ### Board Class
-The most comprehensive class, handling game state, object positioning, collisions, and scorekeeping. Includes animations for each object and displays scores and remaining lives.
+Contains the main game logic, displaying and updating game elements like the plane, background, and enemies. Also handles collision detection, scoring, and the game-over state.
+
+**Key Functions**:
+- **Object Movement**: Updates positions based on user input and game logic.
+- **Plane Loops**: Allows the player to perform loops for evasion.
+- **Enemy Spawn**: Generates enemies based on the game timer.
+- **Shooting**: Adds projectiles to the screen based on the firing conditions.
+- **Collision Detection**: Manages health and updates scores on hit.
 
 ## Conclusions
+
 ### Summary
-The project successfully created an endless version of *1942*, adding our custom features. Implementing enemy movement patterns was challenging but rewarding. Though we couldn't include background music or sound effects, the game remains engaging.
+The project successfully created an endless version of *1942*, adding custom features. We implemented all required elements and added unique enemy movement patterns. Although we couldn't include background music or sound effects due to time constraints, the game remains enjoyable.
 
 ### Challenges and Lessons Learned
-We encountered difficulties with Pyxel, especially with image banks, and learned the value of time management. Future projects would likely be easier with this experience.
+Key difficulties included working with Pyxel, particularly with image banks. We also learned valuable lessons about time management and troubleshooting in game development.
+
+We are confident that future projects with similar complexity will be easier and more rewarding based on this experience.
