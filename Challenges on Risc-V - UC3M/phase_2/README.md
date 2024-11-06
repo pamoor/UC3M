@@ -1,10 +1,13 @@
----
-title: "Practice 2 - Computer Architecture"
-author: "Pablo Amor Molina (100495855) and Manuel Roldán Matea (100500450)"
-date: "03/12/2023"
----
+# Practice 2: Computer Architecture
 
-# Practice 2 - Computer Architecture
+**Course:** 2023/2024  
+**Authors:**  
+- Pablo Amor Molina - 100495855 ([10495855@alumnos.uc3m.es](mailto:10495855@alumnos.uc3m.es))
+- Manuel Roldán Matea - 100500450 ([100500450@alumnos.uc3m.es](mailto:100500450@alumnos.uc3m.es))  
+
+**Group:** 81  
+**Degree:** Computer Engineering  
+**Subject:** Computer Architecture 
 
 This document describes the implementation and results obtained in the microprogramming practice for the Computer Architecture course in Computer Engineering at Universidad Carlos III de Madrid.
 
