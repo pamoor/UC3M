@@ -1,66 +1,72 @@
 # Fuzzy Logic Inference System for Loan Risk Assessment
-Course: 2023/2024
-Authors:
 
-PABLO AMOR MOLINA - (10495855@alumnos.uc3m.es)
-SERGIO VERDE LLORENTE - (100495899@alumnos.uc3m.es)
-HUGO CUEVAS ROMERA - (100495962@alumnos.uc3m.es)
+**Course:** 2023/2024  
+**Authors:**  
+- Pablo Amor Molina - 100495855 ([10495855@alumnos.uc3m.es](mailto:10495855@alumnos.uc3m.es))
+- Sergio Verde Llorente - 100495899 ([10495899@alumnos.uc3m.es](mailto:10495899@alumnos.uc3m.es))
+- Hugo Cuevas Romera - 100495962 ([10495962@alumnos.uc3m.es](mailto:10495962@alumnos.uc3m.es))  
 
-Degree: Computer Engineering
-Subject: Computer Architecture
+**Group:** 81  
+**Degree:** Computer Engineering  
+**Subject:** Aritificial Inteligence  
 
-## Overview
+## Table of Contents
+1. [System Overview](#system-overview)
+2. [System Components](#system-components)
+   - [Fuzzification](#fuzzification)
+   - [Rule Evaluation](#rule-evaluation)
+   - [Composition](#composition)
+   - [Defuzzification](#defuzzification)
+3. [How to Use](#how-to-use)
+4. [Key Functions](#key-functions)
+   - [procesapp](#procesapp)
+   - [fuzzy](#fuzzy)
+5. [Results](#results)
+6. [Conclusions](#conclusions)
 
-This project implements a Fuzzy Logic Inference System based on the Mamdani model to assist banks in making decisions regarding personal loan approvals. The system evaluates various factors such as employment, age, income, and others to calculate the risk level associated with each loan application.
+## System Overview
 
-The system uses fuzzy sets and rules to process loan applications and provide a risk score, helping banks decide whether to approve or reject a loan request.
+This project implements a Fuzzy Logic Inference System to assist banks in determining the risk level of loan applications. It is based on the Mamdani fuzzy inference model, designed to process factors such as employment, age, income, and other personal details. These inputs are used to assess whether a loan should be approved or denied based on the risk score calculated by the system.
 
 ## System Components
 
-The system follows the Mamdani inference model, which consists of the following steps:
+The system follows the Mamdani inference model and is divided into four steps:
 
-1. **Fuzzification**: Convert input variables into fuzzy degrees.
-2. **Rule Evaluation**: Apply fuzzy rules to assess the input variables.
-3. **Composition**: Combine the results of the evaluated rules.
-4. **Defuzzification**: Convert the fuzzy output into a single numeric risk value.
+### Fuzzification
+In this step, input variables are transformed into fuzzy values (degrees of membership) using predefined membership functions. Variables such as age, income, and employment are mapped to fuzzy sets to facilitate decision-making.
 
-These steps are repeated for each loan application to compute the corresponding risk level.
+### Rule Evaluation
+In this phase, the fuzzy rules are applied. These rules determine the relationship between the input variables and the output (loan risk level). The system calculates the antecedents and consequents for each rule, applying the degree of membership to determine the rule's influence on the final output.
 
-## Fuzzification
+### Composition
+Once the rules are evaluated, the system combines the results to form a fuzzy set for the output (loan risk). This fuzzy set represents the degree of risk for each application.
 
-The input values (age, income, etc.) are converted into degrees of membership using predefined fuzzy sets. This process is based on fuzzy membership functions defined in the system configuration.
-
-## Rule Evaluation
-
-Fuzzy rules, stored in the system, evaluate the loan application's characteristics. The system calculates the antecedent and applies the result to the consequent membership function, adjusting the risk level accordingly.
-
-## Composition
-
-The resulting membership functions from the rules are combined into a fuzzy set for the output variable (risk level).
-
-## Defuzzification
-
-The final fuzzy set is defuzzified using the centroid method to generate a single numeric value representing the risk level of the loan application.
+### Defuzzification
+The final step converts the fuzzy output set into a crisp value using the centroid method. This value represents the risk level of the loan application and helps the bank make a decision.
 
 ## How to Use
 
-1. Initialize the system by loading all the necessary data, including fuzzy sets, rules, and loan applications.
-2. The system processes each loan application in a loop, calling the `procesapp` function to compute the risk score.
-3. The risk score is stored in an output file for further analysis or decision-making.
+1. **Initialize the system** by loading fuzzy sets, rules, and loan application data.
+2. **Process loan applications**: For each application, the system performs fuzzification, rule evaluation, composition, and defuzzification to calculate the risk score.
+3. **Output the results**: The risk scores are saved in a results file for review and decision-making.
 
 ## Key Functions
 
-- **`procesapp`**: This function handles the main fuzzy inference process, including fuzzification, rule evaluation, composition, and defuzzification.
-- **`fuzzy`**: This auxiliary function performs fuzzification for a given loan application.
+### procesapp
+This function performs the main fuzzy inference process:
+- Fuzzifies input variables.
+- Evaluates fuzzy rules.
+- Combines the rule results.
+- Defuzzifies the final fuzzy set to produce the risk score.
+
+### fuzzy
+This auxiliary function handles the fuzzification process. It receives the loan application data and converts each input variable into fuzzy degrees of membership.
 
 ## Results
 
-The risk score for each loan application is saved in a result file, allowing bank staff to review and make decisions based on the computed risk levels.
+The system produces a risk score for each loan application, saved in a results file. These scores assist in making decisions on loan approval. The fuzzy logic approach allows for nuanced decision-making, accounting for multiple variables and uncertainty in the data.
 
-## Notes
+## Conclusions
 
-- The code is fully delivered, except for a known issue in the function `readFuzzySetsFile` within the file `MFIS_Read_Functions.py`, where the list was initialized with fewer values than required, leading to out-of-range errors.
+This system efficiently assesses the risk of loan applications using fuzzy logic. The use of fuzzy sets allows the system to handle uncertain and imprecise data, providing a flexible tool for financial decision-making. The implementation follows the Mamdani inference model, ensuring that the results are accurate and interpretable.
 
-## Conclusion
-
-This system provides an efficient and automated way to assess loan risks, streamlining the decision-making process for banks. It can handle multiple loan applications per day and generates precise risk scores based on well-defined fuzzy logic rules.
