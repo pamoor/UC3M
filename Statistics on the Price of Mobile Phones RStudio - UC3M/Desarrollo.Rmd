@@ -1,0 +1,194 @@
+---
+title: "Trabajo estadística"
+author: "Manuel Roldán y Pablo Amor"
+date: "2023-11-28"
+output: pdf_document
+---
+
+```{r}
+library(readxl)
+Respuestas <- read_excel("Respuestas.xlsx")
+#View(Respuestas)
+```
+
+
+
+```{r INTRODUCCIÓN}
+par(mfrow=c(1,2))
+Preciomax <- max(Respuestas$Precio)
+
+
+Nuevos<-hist(Respuestas$Precio[Respuestas$Condicion== "Nuevo"], xlab = "Precio", xlim = c(0,Preciomax), ylim= c(0,70), main = "Móviles Nuevos", breaks=seq(0,Preciomax, 100))
+
+hist(Respuestas$Precio[Respuestas$Condicion== "Segunda Mano"], xlab = "Precio", breaks=4, xlim=c(0,Preciomax), ylim= c(0,70), main = "Móviles 2ª mano")
+
+hist(Respuestas$Precio, xlab= "Precio", ylab= "Frecuencia", main= "Precios móviles")
+
+boxplot(Respuestas$Precio, Xlab = "Precio", main = "Boxplot", horizontal=TRUE)
+
+suppressWarnings(library(summarytools))
+descr(Respuestas$Precio)
+```
+
+```{r AJUSTE DE DISTRIBUCIÓN MAL,warning=FALSE }
+
+
+library(fitdistrplus)
+lnormfit <- fitdist(Respuestas$Precio, "lnorm")
+lnormfit
+
+
+
+Partition <- hist(Respuestas$Precio, plot = FALSE)
+Partition
+
+
+CummulativeProbabilities = plnorm(c(Partition$breaks[-9], Inf),
+lnormfit$estimate[1],lnormfit$estimate[2])
+Probabilities = diff(CummulativeProbabilities)
+Expected = length(Respuestas$Precio)*Probabilities
+Expected
+chisq.test(Partition$counts, p = Probabilities)
+denscomp(lnormfit)
+hist(Respuestas$Precio, xlab= "Precio", ylab= "Densidad", main= "Precios móviles", probability = TRUE, col="darkorange",ylim=c(0,0.0025))
+curve(dlnorm(x, lnormfit$estimate[1],lnormfit$estimate[2]), col="darkred", lwd=3, add=TRUE)
+
+```
+
+
+```{r AJUSTE DE DISTRIBUCIÓN BIEN,warning=FALSE }
+
+
+library(fitdistrplus)
+expfit <- fitdist(Respuestas$Precio, "exp")
+expfit
+
+
+
+Partition <- hist(Respuestas$Precio, plot = FALSE)
+Partition
+
+
+CummulativeProbabilities = pexp(c(Partition$breaks[-9], Inf),
+expfit$estimate[1])
+Probabilities = diff(CummulativeProbabilities)
+Expected = length(Respuestas$Precio)*Probabilities
+Expected
+chisq.test(Partition$counts, p = Probabilities)
+denscomp(expfit)
+print("p-valor recalculado:")
+pchisq(10.589, df=5, lower.tail=FALSE)
+
+hist(Respuestas$Precio, xlab= "Precio", ylab= "Densidad", main= "Precios móviles", probability = TRUE, col="lightblue",ylim=c(0,0.0025))
+curve(dexp(x, expfit$estimate[1]), col="darkblue", lwd=3, add=TRUE)
+```
+
+
+```{r INTERVALOS DE CONFIANZA}
+n1 = length(Respuestas$Precio[Respuestas$Edad<30])
+mean1 = mean(Respuestas$Precio[Respuestas$Edad<30])
+sd1 = sd(Respuestas$Precio[Respuestas$Edad<30])
+LowerLimit1 = mean1 - 1.96*sd1/sqrt(n1)
+UpperLimit1 = mean1 + 1.96*sd1/sqrt(n1)
+
+
+n2 = length(Respuestas$Precio[Respuestas$Edad>=30])
+mean2 = mean(Respuestas$Precio[Respuestas$Edad>=30])
+sd2 = sd(Respuestas$Precio[Respuestas$Edad>=30])
+LowerLimit2 = mean2 - 1.96*sd2/sqrt(n2)
+UpperLimit2 = mean2 + 1.96*sd2/sqrt(n2)
+
+print("Intervalo <30")
+LowerLimit1
+UpperLimit1
+
+print("Intervalo >=30")
+LowerLimit2
+UpperLimit2
+
+```
+
+```{r HIPÓTESIS}
+
+meanmayor30=mean(Respuestas$Precio[Respuestas$Edad>=30])
+print("Media Precios móviles >= 30 años")
+meanmayor30
+
+print("H0 : µ(Precios móviles < 30 años) <= 354.2222")
+print("H1 : µ(Precios móviles < 30 años) >  354.2222")
+
+t.test(Respuestas$Precio[Respuestas$Edad<30], mu=meanmayor30, alternative = "greater")
+
+print("Cálculo del p-valor")
+pnorm(2.6378, lower.tail = FALSE)
+```
+
+
+```{r REGRESIÓN MÚLTIPLE}
+Respuestas$IOS = (Respuestas$SO=="IOS")
+Respuestas$Segunda_Mano = (Respuestas$Condicion=="Segunda Mano")
+boxplot(Respuestas$Precio ~ Respuestas$SO, horizontal = TRUE)
+boxplot(Respuestas$Precio ~ Respuestas$Condicion, horizontal = TRUE)
+
+
+print("Modelo Inicial")
+model <- lm(Precio ~ Edad + Antiguedad + Almacenamiento + IOS + Segunda_Mano, data = Respuestas )
+summary(model)
+
+
+print("Modelo final")
+model <- lm(Precio ~ Edad +  Almacenamiento + IOS + Segunda_Mano, data = Respuestas )
+summary(model)
+par(mfrow = c(2,2))
+plot(model)
+
+
+```
+
+```{r REGRESIÓN MÚLTIPLE}
+Respuestas$Android = (Respuestas$SO=="Android")
+Respuestas$Segunda_Mano = (Respuestas$Condicion=="Segunda Mano")
+boxplot(Respuestas$Precio ~ Respuestas$SO, horizontal = TRUE)
+boxplot(Respuestas$Precio ~ Respuestas$Condicion, horizontal = TRUE)
+
+
+print("Modelo Inicial")
+model <- lm(Precio ~ Edad + Antiguedad + Almacenamiento + Android + Segunda_Mano, data = Respuestas )
+summary(model)
+
+
+print("Modelo final")
+model <- lm(Precio ~ Edad +  Almacenamiento + Android + Segunda_Mano, data = Respuestas )
+summary(model)
+par(mfrow = c(2,2))
+plot(model)
+
+
+```
+
+```{r REGRESIÓN MÚLTIPLE marcas}
+Respuestas$Samsung = (Respuestas$Marca=="Samsung")
+Respuestas$Xiaomi = (Respuestas$Marca=="Xiaomi")
+Respuestas$Oppo = (Respuestas$Marca=="Oppo")
+Respuestas$Huawei = (Respuestas$Marca=="Huawei")
+Respuestas$Segunda_Mano = (Respuestas$Condicion=="Segunda Mano")
+
+boxplot(Respuestas$Precio ~ Respuestas$SO, horizontal = TRUE)
+boxplot(Respuestas$Precio ~ Respuestas$Condicion, horizontal = TRUE)
+
+
+print("Modelo Inicial marcas")
+model <- lm(Precio ~ Edad + Antiguedad + Almacenamiento + Samsung + Xiaomi + Oppo +Huawei + Segunda_Mano, data = Respuestas )
+summary(model)
+print("Modelo final marcas")
+model <- lm(Precio ~ Edad +  Almacenamiento + Samsung + Xiaomi + Oppo + Huawei + Segunda_Mano, data = Respuestas )
+summary(model)
+par(mfrow = c(2,2))
+plot(model)
+
+
+```
+
+
+
+
